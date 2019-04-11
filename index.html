@@ -15,7 +15,7 @@
         <title>Polar Data Catalogue</title>
     </head>
     <body>
-        <header class="navbar navbar-expand navbar-dark bg-info flex-column flex-md-row bd-navbar">
+        <header class="navbar navbar-expand navbar-dark bg-info flex-column flex-md-row bd-navbar" id='header'>
             <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Polar Data Catalogue</a>
         </header>
         <div class="container-fluid">
@@ -33,15 +33,237 @@
                         </button>
                     </div>
                     <div class="row">
-                        <div class="sidebar-sticky ml-auto" id="metadata"></div>
+                        <div class="sidebar-sticky ml-auto" id="metadata">
+                            <h5 id="meta-sidebar-title"></h5>
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td>File Id</td>
+                                        <td id="meta-file_id"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Language</td>
+                                        <td id="meta-language"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Character Set</td>
+                                        <td id="meta-charset"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Hierarchy Level</td>
+                                        <td id="meta-hierarchyLevel"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td> </td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Person</td>
+                                        <td id="meta-contact_person"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Organisation</td>
+                                        <td id="meta-contact_org"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td id="meta-address"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>City</td>
+                                        <td id="meta-city"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Province</td>
+                                        <td id="meta-province"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Postal Code</td>
+                                        <td id="meta-postalCode"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Country</td>
+                                        <td id="meta-country"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>E-Mail</td>
+                                        <td id="meta-email"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone</td>
+                                        <td id="meta-phone"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Website</td>
+                                        <td id="meta-website"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Role</td>
+                                        <td id="meta-role"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date Stamp</td>
+                                        <td id="meta-dateStamp"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Standard Name</td>
+                                        <td id="meta-standardName"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Standard Version</td>
+                                        <td id="meta-standardVersion"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dataset URI</td>
+                                        <td id="meta-datasetURI"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Title</td>
+                                        <td id="meta-title"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Responsible Parties</td>
+                                        <td id="meta-responsibleParties"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Recommended Citation</td>
+                                        <td id="meta-recommendedCitation"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Purpose</td>
+                                        <td id="meta-purpose"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Abstract</td>
+                                        <td id="meta-abstr"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Supplemental Information</td>
+                                        <td id="meta-supplInfo"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Topic Category</td>
+                                        <td id="meta-topicCategory"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td id="meta-status"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Keywords</td>
+                                        <td id="meta-keywords"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Thesaurus Name</td>
+                                        <td id="meta-thesaurusName"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Use Constraints</td>
+                                        <td id="meta-useConstraints"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Access Constraints</td>
+                                        <td id="meta-accessConstraints"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>West Bound Longitude</td>
+                                        <td id="meta-westLon"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>East Bound Longitude</td>
+                                        <td id="meta-eastLon"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>North Bound Latitude</td>
+                                        <td id="meta-northLat"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>South Bound Latitude</td>
+                                        <td id="meta-southLat"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Begin Date</td>
+                                        <td id="meta-beginDate"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>End Date</td>
+                                        <td id="meta-endDate"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Organisation</td>
+                                        <td id="meta-distr_contactOrg"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Person</td>
+                                        <td id="meta-distr_contactPerson"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contact Position</td>
+                                        <td id="meta-distr_contactPosition"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Address</td>
+                                        <td id="meta-distr_address"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>City</td>
+                                        <td id="meta-distr_city"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Province</td>
+                                        <td id="meta-distr_province"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Postal Code</td>
+                                        <td id="meta-distr_postalCode"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Country</td>
+                                        <td id="meta-distr_country"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>E-Mail</td>
+                                        <td id="meta-distr_email"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone</td>
+                                        <td id="meta-distr_phone"> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Maintenance Frequency</td>
+                                        <td id="meta-maintenanceFreq"> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            <main class="col-xl-9 ml-auto bd-content p-0" id="map-container" role="main">
-                <div id="mapid"></div>        
-            </main>
+                <main class="col-xl-9 ml-auto bd-content p-0" id="map-container" role="main">
+                    <div id="mapid"></div>        
+                </main>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
