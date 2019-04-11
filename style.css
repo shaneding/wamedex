@@ -28,6 +28,14 @@ html, body {
   overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
 }
 
+.card:hover{
+    border-color: #8d8e8e !important;
+}
+
+.card.border-primary:hover{
+    border-color: #007bff !important;
+}
+
 @supports ((position: -webkit-sticky) or (position: sticky)) {
   .sidebar-sticky {
     position: -webkit-sticky;

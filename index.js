@@ -23,11 +23,28 @@ for (let i = 0; i < datasets.length; i++) {
     });
     
     var card =  `<div class="card p-2 mb-2" id="dataset-${i}">` +
-                    `<h5 class="card-title">${title}</h5>` + 
-                    `<button type="button" id="showMetadata-${i}" class="btn btn-link ml-auto" onclick="toggleMetadata(${i}, false);">Show Metadata</button>` +
-                    `<button type="button" id="hideMetadata-${i}" class="btn btn-link ml-auto" onclick="toggleMetadata(${i}, false);" style="display: none;">Hide Metadata</button>` +
+                    `<h5 class="card-title">${title}</h5>` +
+                    '<div class="row justify-content-end">' +
+                        `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">Show Bounds</button>` +
+                        `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">Hide Bounds</button>` +
+                        `<a href="#" id="showMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, false);">Show Metadata</a>` +
+                        `<a href="#" id="hideMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, false);" style="display: none;">Hide Metadata</a>` +
+                    '</div>' +
                 '</div>';
     $(card).appendTo('#datasetList');
+}
+
+function toggleBounds(i) {
+    if (map.hasLayer(markers[i])) {
+        map.removeLayer(markers[i]);
+        $('#showBounds-' + i).show();
+        $('#hideBounds-' + i).hide();
+    } else {
+        map.addLayer(markers[i]);
+        $('#showBounds-' + i).hide();
+        $('#hideBounds-' + i).show();
+    }
+    
 }
 
 function toggleMetadata(selectedMetadata, scroll_to) {
@@ -38,7 +55,6 @@ function toggleMetadata(selectedMetadata, scroll_to) {
     closeMetadata();
     currentMetadata = selectedMetadata;
     var dataset = datasets[selectedMetadata];
-    //var metadata = '<p>' + JSON.stringify(dataset) + '</p>';
     
     // Switch from "show" to "hide" button
     $('#hideMetadata-' + selectedMetadata).show()
@@ -47,18 +63,17 @@ function toggleMetadata(selectedMetadata, scroll_to) {
     // Show metadata sidebar
     $('#metadata').html(parseMetadata(dataset));
     if (!$('#metadata-container').is(':visible')) {
-        $('#map-container').removeClass('col-xl-9').addClass('col-xl-6');
+        $('#map-container').removeClass('col-9').addClass('col-6');
+        $('#datasetList-container').removeClass('col-3').addClass('col-2');
         $('#metadata-container').show();
     }
     
     // Scroll to card in dataset list
     if (scroll_to) {
         var target = $('#dataset-' + selectedMetadata);
-        if (target.length) {
-            //var headerSize = $('#header').outerHeight()
-            var top = target.offset().top;// + headerSize;
-            $('#datasetList').animate({scrollTop: top}, 500);
-        }
+        $('#datasetList').scrollTop = 0;
+        target[0].scrollIntoView(true);
+        $('#datasetList')[0].scrollTop -= 8;
     }
     
     // Highlight entry in dataset list
@@ -66,13 +81,15 @@ function toggleMetadata(selectedMetadata, scroll_to) {
     
     // Remove other markers
     for (let i = 0; i < markers.length; i++) {
-        if (i != selectedMetadata) {
+        if (i != selectedMetadata && map.hasLayer(markers[i])) {
             map.removeLayer(markers[i]);
+            $('#showBounds-' + i).show();
+            $('#hideBounds-' + i).hide();
         }
     }
     
     if (markers[selectedMetadata].getCenter) {
-        map.flyToBounds(markers[selectedMetadata].getBounds().pad(Math.sqrt(2) / 2));  // Polygon
+        map.flyToBounds(markers[selectedMetadata].getBounds().pad(Math.sqrt(2) / 2), {animate: true, duration: 0.5});  // Polygon
     } else {
         map.panTo(markers[selectedMetadata].getLatLng());  // Marker
     }
@@ -83,7 +100,8 @@ function toggleMetadata(selectedMetadata, scroll_to) {
 function closeMetadata() {
     // Hide metadata sidebar
     $('#metadata-container').hide();
-    $('#map-container').removeClass('col-xl-6').addClass('col-xl-9');
+    $('#datasetList-container').removeClass('col-2').addClass('col-3');
+    $('#map-container').removeClass('col-6').addClass('col-9');
     
     // Switch from "hide" to "show" button
     $('#hideMetadata-' + currentMetadata).hide()
@@ -93,8 +111,10 @@ function closeMetadata() {
     if (currentMetadata != null) {
         $('#dataset-' + currentMetadata).removeClass('border-primary');
         for (let i = 0; i < markers.length; i++) {
-            if (i != currentMetadata) {
-                map.addLayer(markers[i]);
+            if (i != currentMetadata && !map.hasLayer(markers[i])) {
+                map.addLayer(markers[i]);                
+                $('#showBounds-' + i).hide();
+                $('#hideBounds-' + i).show();
             }
         }
         currentMetadata = null;
@@ -135,12 +155,12 @@ function parseMetadata(dataset){
     var country = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:country"];
     var email = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:electronicMailAddress"];
     var phone = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:phone"]["gmd:CI_Telephone"]["gmd:voice"];
-    var website = metadata;//TODO
+    var website = metadata["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:pointOfContact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:onlineResource"]["gmd:CI_OnlineResource"]["gmd:linkage"]["gmd:URL"];
     var role = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:role"]["gmd:CI_RoleCode"];
-    var dateStamp = metadata["gmd:contact"]["gmd:dateStamp"];
-    var standardName = metadata["gmd:contact"]["gmd:metadataStandardName"];
-    var standardVersion = metadata["gmd:contact"]["gmd:metadataStandardVersion"];
-    var datasetURI = metadata["gmd:contact"]["gmd:datasetURI"];
+    var dateStamp = metadata["gmd:dateStamp"];
+    var standardName = metadata["gmd:metadataStandardName"];
+    var standardVersion = metadata["gmd:metadataStandardVersion"];
+    var datasetURI = metadata["gmd:dataSetURI"];
     
     var title = metadata["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:citation"]["gmd:CI_Citation"]["gmd:title"];
     var responsibleParties = metadata["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:citation"]["gmd:CI_Citation"]["gmd:citedResponsibleParty"];//TODO
@@ -192,17 +212,22 @@ function parseMetadata(dataset){
     $('#meta-province').html(province);
     $('#meta-postalCode').html(postalCode);
     $('#meta-country').html(country);
-    $('#meta-email').html(email);
+    $('#meta-email').html("<a href='mailto:" + email + "'>" + email + "</a>");
     $('#meta-phone').html(phone);
-    $('#meta-website').html(website);
+    $('#meta-website').html("<a href='" + website + "'>" + website + "</a>");
     $('#meta-role').html(role);
     $('#meta-dateStamp').html(dateStamp);
     $('#meta-standardName').html(standardName);
     $('#meta-standardVersion').html(standardVersion);
-    $('#meta-datasetURI').html(datasetURI);
+    $('#meta-datasetURI').html("<a href='" + datasetURI + "'>" + datasetURI + "</a>");
     
     $('#meta-title').html(title);
-    $('#meta-responsibleParties').html(responsibleParties);
+    var responsiblePartiesString = "";
+    for (let i = 0; i < responsibleParties.length; i++) {
+        responsiblePartiesString += responsibleParties[i]["gmd:CI_ResponsibleParty"]["gmd:individualName"] + ", " + 
+                                    responsibleParties[i]["gmd:CI_ResponsibleParty"]["gmd:role"]["gmd:CI_RoleCode"] + "<br/>"
+    }
+    $('#meta-responsibleParties').html(responsiblePartiesString.substring(0, responsiblePartiesString.length - 1));
     $('#meta-recommendedCitation').html(recommendedCitation);
     $('#meta-purpose').html(purpose);
     $('#meta-abstr').html(abstr);
@@ -210,7 +235,11 @@ function parseMetadata(dataset){
     $('#meta-topicCategory').html(topicCategory);
     $('#meta-status').html(status);
     
-    $('#meta-keywords').html(keywords);
+    var keywordsString = "";
+    for (let i = 0; i < keywords.length; i++) {
+        keywordsString += keywords[i]["gmd:MD_Keywords"]["gmd:keyword"] + ", <br/>"
+    }
+    $('#meta-keywords').html(keywordsString.substring(0, keywordsString.length - 7));
     $('#meta-thesaurusName').html(thesaurusName);
     $('#meta-useConstraints').html(useConstraints);
     $('#meta-accessConstraints').html(accessConstraints);
@@ -231,7 +260,7 @@ function parseMetadata(dataset){
     $('#meta-distr_province').html(distr_province);
     $('#meta-distr_postalCode').html(distr_postalCode);
     $('#meta-distr_country').html(distr_country);
-    $('#meta-distr_email').html(distr_email);
+    $('#meta-distr_email').html("<a href='mailto:" + distr_email + "'>" + distr_email + "</a>");
     $('#meta-distr_phone').html(distr_phone);
     $('#meta-maintenanceFreq').html(maintenanceFreq);
     

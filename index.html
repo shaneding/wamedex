@@ -1,40 +1,37 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Bootstrap CSS -->
+        
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
-           integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
-           crossorigin=""/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
         <link rel="stylesheet" href="style.css">
 
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         <title>Polar Data Catalogue</title>
     </head>
     <body>
-        <header class="navbar navbar-expand navbar-dark bg-info flex-column flex-md-row bd-navbar" id='header'>
+        <header class="navbar navbar-expand navbar-dark bg-info flex-column flex-md-row" id="header">
             <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Polar Data Catalogue</a>
         </header>
         <div class="container-fluid">
             <div class="row flex-xl-nowrap">
-                <div class="col-12 col-md-4 col-xl-3 bd-sidebar" style="border-right: 1px solid rgba(0,0,0,.1)">
-                    <nav class="bd-docs-nav">
-                        <div class="sidebar-sticky ml-auto" id='datasetList'>
+                <div id="datasetList-container" class="col-3 p-0">
+                    <nav>
+                        <div class="sidebar-sticky ml-auto p-2" id="datasetList"  style="border-right: 1px solid rgba(0,0,0,.1)">
                         </div>
                     </nav>
                 </div>
-                <div class="col-12 col-md-4 col-xl-3 ml-auto bd-sidebar" id="metadata-container" style="display: none; border-right: 1px solid rgba(0,0,0,.1)">
+                <div class="col-4 ml-auto" id="metadata-container" style="display: none; border-right: 1px solid rgba(0,0,0,.1)">
                     <div class="row justify-content-end mr-auto">
                         <button type="button" class="close" aria-label="Close" onclick="closeMetadata()">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="row">
-                        <div class="sidebar-sticky ml-auto" id="metadata">
-                            <h5 id="meta-sidebar-title"></h5>
+                        <div class="sidebar-sticky ml-auto p-2" id="metadata">
+                            <h5 id="meta-sidebar-title" class="pb-4"></h5>
                             <table class="table">
                                 <tbody>
                                     <tr>
@@ -54,8 +51,8 @@
                                         <td id="meta-hierarchyLevel"> </td>
                                     </tr>
                                     <tr>
-                                        <td> </td>
-                                        <td> </td>
+                                        <th scope="col">Contact</th>
+                                        <th scope="col"> </th>
                                     </tr>
                                     <tr>
                                         <td>Contact Person</td>
@@ -118,8 +115,8 @@
                                         <td id="meta-datasetURI"> </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td> </td>
+                                        <th scope="col"> Identification Information</th>
+                                        <th scope="col"> </th>
                                     </tr>
                                     <tr>
                                         <td>Title</td>
@@ -154,8 +151,8 @@
                                         <td id="meta-status"> </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td> </td>
+                                        <th scope="col">Descriptive Keywords</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     <tr>
                                         <td>Keywords</td>
@@ -166,6 +163,10 @@
                                         <td id="meta-thesaurusName"> </td>
                                     </tr>
                                     <tr>
+                                        <th scope="col">Metadata Constraints</th>
+                                        <th scope="col"></th>
+                                    </tr>                                    
+                                    <tr>
                                         <td>Use Constraints</td>
                                         <td id="meta-useConstraints"></td>
                                     </tr>
@@ -174,8 +175,8 @@
                                         <td id="meta-accessConstraints"> </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td> </td>
+                                        <th scope="col">Geographic Bounding Box</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     <tr>
                                         <td>West Bound Longitude</td>
@@ -194,8 +195,8 @@
                                         <td id="meta-southLat"> </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td> </td>
+                                        <th scope="col">Bounding Temporal Extent</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     <tr>
                                         <td>Begin Date</td>
@@ -206,8 +207,8 @@
                                         <td id="meta-endDate"> </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
+                                        <th scope="col">Distribution Information</th>
+                                        <th scope="col"></th>
                                     </tr>
                                     <tr>
                                         <td>Contact Organisation</td>
@@ -258,13 +259,12 @@
                         </div>
                     </div>
                 </div>
-                <main class="col-xl-9 ml-auto bd-content p-0" id="map-container" role="main">
+                <main class="col-9 ml-auto p-0" id="map-container" role="main">
                     <div id="mapid"></div>        
                 </main>
             </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
         <script src="datasets.js"></script>
