@@ -27,7 +27,7 @@ for (let i = 0; i < datasets.length; i++) {
                     '<div class="row justify-content-end">' +
                         `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">Show Bounds</button>` +
                         `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">Hide Bounds</button>` +
-                        `<a href="#" id="showMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, false);">Show Metadata</a>` +
+                        `<a href="#" id="showMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, true);">Show Metadata</a>` +
                         `<a href="#" id="hideMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, false);" style="display: none;">Hide Metadata</a>` +
                     '</div>' +
                 '</div>';
