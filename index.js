@@ -1,5 +1,5 @@
 
-var map = L.map('mapid').setView([0, -85], 2);
+var map = L.map('mapid').setView([63, -105], 3);
 var currentMetadata = null;
 var markers = [];
 
