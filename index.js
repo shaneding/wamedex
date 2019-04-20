@@ -8,6 +8,25 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     continuousWorld: true
 }).addTo(map);
 
+// Sidebar resizing
+var minSize = 100;
+var maxSize = $(window).width() * 0.95;
+$('#splitbar').mousedown(function (e) {
+    e.preventDefault();
+    $(document).mousemove(function (e) {
+        e.preventDefault();
+        var x = e.pageX - $('#sidebar-wrapper').offset().left;
+        if (x > minSize && x < maxSize && e.pageX < ($(window).width() - minSize)) {  
+          $('#sidebar-wrapper').css("width", x);
+          $('#map-container').css("width", $(window).width() - x);
+          map.invalidateSize();
+        }
+    })
+});
+$(document).mouseup(function (e) {
+    $(document).unbind('mousemove');
+});
+
 for (let i = 0; i < datasets.length; i++) { 
     var dataset = datasets[i];
     var title = getTitle(dataset);
@@ -42,11 +61,6 @@ for (let i = 0; i < datasets.length; i++) {
                 '</div>';
     $(card).appendTo('#datasetList');
     $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
-}
-
-function toggleSidebar() {
-  $("#sidebar-wrapper").toggleClass("col-5").toggleClass("d-none");
-  $("#map-container").toggleClass("col-7").toggleClass("col-12");
 }
 
 function toggleBounds(i) {

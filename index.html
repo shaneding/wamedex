@@ -13,20 +13,22 @@
     </head>
     <body>
         <header class="navbar navbar-expand sticky-top navbar-dark bg-info flex-column flex-md-row" id="header">
-            <button class="btn btn-link" type="button" onclick="toggleSidebar()" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-            </button>
             <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Waterloo Metadata Index</a>
+            <nav class="ml-auto">
+                <img class="img-right mr-2" src="GWF_logo.png" height="40"/>
+                <img class="img-right" src="logo_uw_horizontal.png" height="40"/>
+            </nav>
         </header>
         <div class="container-fluid">
             <div class="row flex-xl-nowrap" id="wrapper">
-                <div id="sidebar-wrapper" class="col-5 p-0">
-                    <div class="sidebar-sticky ml-auto p-2"><!-- style="border-right: 1px solid rgba(0,0,0,.1)">-->
+                <div id="sidebar-wrapper" class="p-0">
+                    <div id="splitbar"></div>
+                    <div class="sidebar-sticky ml-auto p-2">
                         <div class="accordion" id="datasetList">
                         </div>
                     </div>
                 </div>
-                <main class="col-7 ml-auto p-0" id="map-container" role="main">
+                <main class="ml-auto p-0" id="map-container" role="main">
                     <div id="mapid"></div>        
                 </main>
             </div>
