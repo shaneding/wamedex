@@ -22,16 +22,31 @@ for (let i = 0; i < datasets.length; i++) {
         toggleMetadata(i, true);
     });
     
-    var card =  `<div class="card p-2 mb-2" id="dataset-${i}">` +
-                    `<h5 class="card-title">${title}</h5>` +
-                    '<div class="row justify-content-end">' +
-                        `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">Show Bounds</button>` +
-                        `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">Hide Bounds</button>` +
-                        `<a href="#" id="showMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, true);">Show Metadata</a>` +
-                        `<a href="#" id="hideMetadata-${i}" class="btn btn-link stretched-link" onclick="toggleMetadata(${i}, false);" style="display: none;">Hide Metadata</a>` +
+    var card =  `<div class="card" id="dataset-${i}">` +
+                    `<div class="card-header" id="heading-${i}">` +
+                        '<h6 class="mb-0">' + 
+                            `<a class="collapsed text-left stretched-link" type="button" data-target="#collapse-${i}" aria-expanded="false" aria-controls="collapse-${i}" onclick="toggleMetadata(${i}, false);">` +
+                                `${title}` + 
+                            '</a>' +
+                        '</h6>' +
+                        '<div class="row justify-content-end">' +
+                            `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">Show Bounds</button>` +
+                            `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">Hide Bounds</button>` +                        
+                        '</div>' +
+                    '</div>' +
+                    `<div id="collapse-${i}" class="collapse" aria-labelledby="heading-${i}" data-parent="#datasetList">` +
+                      '<div class="card-body">' +
+                        `<div id="metadataTable-${i}"></div>` +
+                      '</div>' +
                     '</div>' +
                 '</div>';
     $(card).appendTo('#datasetList');
+    $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
+}
+
+function toggleSidebar() {
+  $("#sidebar-wrapper").toggleClass("col-5").toggleClass("d-none");
+  $("#map-container").toggleClass("col-7").toggleClass("col-12");
 }
 
 function toggleBounds(i) {
@@ -56,18 +71,9 @@ function toggleMetadata(selectedMetadata, scroll_to) {
     currentMetadata = selectedMetadata;
     var dataset = datasets[selectedMetadata];
     
-    // Switch from "show" to "hide" button
-    $('#hideMetadata-' + selectedMetadata).show()
-    $('#showMetadata-' + selectedMetadata).hide()
-    
-    // Show metadata sidebar
-    $('#metadata').html(parseMetadata(dataset));
-    if (!$('#metadata-container').is(':visible')) {
-        $('#map-container').removeClass('col-9').addClass('col-6');
-        $('#datasetList-container').removeClass('col-3').addClass('col-2');
-        $('#metadata-container').show();
-    }
-    
+    // Open selected accordion card
+    $('#collapse-' + selectedMetadata).removeClass('collapse');
+   
     // Scroll to card in dataset list
     if (scroll_to) {
         var target = $('#dataset-' + selectedMetadata);
@@ -94,22 +100,15 @@ function toggleMetadata(selectedMetadata, scroll_to) {
         map.panTo(markers[selectedMetadata].getLatLng());  // Marker
     }
     
-    currentMetadata = selectedMetadata;
 }
 
 function closeMetadata() {
-    // Hide metadata sidebar
-    $('#metadata-container').hide();
-    $('#datasetList-container').removeClass('col-2').addClass('col-3');
-    $('#map-container').removeClass('col-6').addClass('col-9');
-    
-    // Switch from "hide" to "show" button
-    $('#hideMetadata-' + currentMetadata).hide()
-    $('#showMetadata-' + currentMetadata).show()
-    
-    // Remove highlighting, add back markers
     if (currentMetadata != null) {
+        // Collapse card in dataset list and remove highlighting
+        $('#collapse-' + currentMetadata).addClass('collapse');
         $('#dataset-' + currentMetadata).removeClass('border-primary');
+        
+        // Add back markers
         for (let i = 0; i < markers.length; i++) {
             if (i != currentMetadata && !map.hasLayer(markers[i])) {
                 map.addLayer(markers[i]);                
@@ -148,8 +147,8 @@ function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
-function parseMetadata(dataset){
-    let metadata = cleanMetadata(dataset)["gmd:MD_Metadata"];
+function populateMetadataTable(i){
+    let metadata = cleanMetadata(datasets[i])["gmd:MD_Metadata"];
     var file_id = metadata["gmd:fileIdentifier"];
     var language = metadata["gmd:language"];
     var charset = metadata["gmd:characterSet"]["gmd:MD_CharacterSetCode"];
@@ -207,72 +206,68 @@ function parseMetadata(dataset){
     var distr_phone =    metadata["gmd:distributionInfo"]["gmd:MD_Distribution"]["gmd:distributor"]["gmd:MD_Distributor"]["gmd:distributorContact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:phone"]["gmd:CI_Telephone"]["gmd:voice"];
     var maintenanceFreq = metadata["gmd:metadataMaintenance"]["gmd:MD_MaintenanceInformation"]["gmd:maintenanceAndUpdateFrequency"]; //TODO
     
+    var metadataTable = '#metadataTable-' + i;
+    $(metadataTable + ' #meta-file_id').text(file_id);
+    $(metadataTable + ' #meta-language').html(language);
+    $(metadataTable + ' #meta-charset').html(charset);
+    $(metadataTable + ' #meta-hierarchyLevel').html(hierarchyLevel);
+    $(metadataTable + ' #meta-contact_person').html(contact_person);
+    $(metadataTable + ' #meta-contact_org').html(contact_org);
+    $(metadataTable + ' #meta-address').html(address);
+    $(metadataTable + ' #meta-city').html(city);
+    $(metadataTable + ' #meta-province').html(province);
+    $(metadataTable + ' #meta-postalCode').html(postalCode);
+    $(metadataTable + ' #meta-country').html(country);
+    $(metadataTable + ' #meta-email').html("<a href='mailto:" + email + "'>" + email + "</a>");
+    $(metadataTable + ' #meta-phone').html(phone);
+    $(metadataTable + ' #meta-website').html("<a href='" + website + "'>" + website + "</a>");
+    $(metadataTable + ' #meta-role').html(role);
+    $(metadataTable + ' #meta-dateStamp').html(dateStamp);
+    $(metadataTable + ' #meta-standardName').html(standardName);
+    $(metadataTable + ' #meta-standardVersion').html(standardVersion);
+    $(metadataTable + ' #meta-datasetURI').html("<a href='" + datasetURI + "'>" + datasetURI + "</a>");
     
-    $('#meta-sidebar-title').html(title);
-    
-    $('#meta-file_id').html(file_id);
-    $('#meta-language').html(language);
-    $('#meta-charset').html(charset);
-    $('#meta-hierarchyLevel').html(hierarchyLevel);
-    $('#meta-contact_person').html(contact_person);
-    $('#meta-contact_org').html(contact_org);
-    $('#meta-address').html(address);
-    $('#meta-city').html(city);
-    $('#meta-province').html(province);
-    $('#meta-postalCode').html(postalCode);
-    $('#meta-country').html(country);
-    $('#meta-email').html("<a href='mailto:" + email + "'>" + email + "</a>");
-    $('#meta-phone').html(phone);
-    $('#meta-website').html("<a href='" + website + "'>" + website + "</a>");
-    $('#meta-role').html(role);
-    $('#meta-dateStamp').html(dateStamp);
-    $('#meta-standardName').html(standardName);
-    $('#meta-standardVersion').html(standardVersion);
-    $('#meta-datasetURI').html("<a href='" + datasetURI + "'>" + datasetURI + "</a>");
-    
-    $('#meta-title').html(title);
     var responsiblePartiesString = "";
     for (let i = 0; i < responsibleParties.length; i++) {
         responsiblePartiesString += responsibleParties[i]["gmd:CI_ResponsibleParty"]["gmd:individualName"] + " (" + 
                                     formatRole(responsibleParties[i]["gmd:CI_ResponsibleParty"]["gmd:role"]["gmd:CI_RoleCode"]) + ")<br/>";
     }
-    $('#meta-responsibleParties').html(responsiblePartiesString.substring(0, responsiblePartiesString.length - 5));
-    $('#meta-recommendedCitation').html(recommendedCitation);
-    $('#meta-purpose').html(purpose);
-    $('#meta-abstr').html(abstr);
-    $('#meta-supplInfo').html(supplInfo);
-    $('#meta-topicCategory').html(topicCategory);
-    $('#meta-status').html(status);
+    $(metadataTable + ' #meta-responsibleParties').html(responsiblePartiesString.substring(0, responsiblePartiesString.length - 5));
+    $(metadataTable + ' #meta-recommendedCitation').html(recommendedCitation);
+    $(metadataTable + ' #meta-purpose').html(purpose);
+    $(metadataTable + ' #meta-abstr').html(abstr);
+    $(metadataTable + ' #meta-supplInfo').html(supplInfo);
+    $(metadataTable + ' #meta-topicCategory').html(topicCategory);
+    $(metadataTable + ' #meta-status').html(status);
     
     var keywordsString = "";
     for (let i = 0; i < keywords.length; i++) {
         keywordsString += keywords[i]["gmd:MD_Keywords"]["gmd:keyword"] + ", <br/>"
     }
-    $('#meta-keywords').html(keywordsString.substring(0, keywordsString.length - 7));
-    $('#meta-thesaurusName').html(thesaurusName);
-    $('#meta-useConstraints').html(useConstraints);
-    $('#meta-accessConstraints').html(accessConstraints);
+    $(metadataTable + ' #meta-keywords').html(keywordsString.substring(0, keywordsString.length - 7));
+    $(metadataTable + ' #meta-thesaurusName').html(thesaurusName);
+    $(metadataTable + ' #meta-useConstraints').html(useConstraints);
+    $(metadataTable + ' #meta-accessConstraints').html(accessConstraints);
     
-    $('#meta-westLon').html(westLon);
-    $('#meta-eastLon').html(eastLon);
-    $('#meta-northLat').html(northLat);
-    $('#meta-southLat').html(southLat);
+    $(metadataTable + ' #meta-westLon').html(westLon);
+    $(metadataTable + ' #meta-eastLon').html(eastLon);
+    $(metadataTable + ' #meta-northLat').html(northLat);
+    $(metadataTable + ' #meta-southLat').html(southLat);
     
-    $('#meta-beginDate').html(beginDate);
-    $('#meta-endDate').html(endDate);
+    $(metadataTable + ' #meta-beginDate').html(beginDate);
+    $(metadataTable + ' #meta-endDate').html(endDate);
     
-    $('#meta-distr_contactOrg').html(distr_contactOrg);
-    $('#meta-distr_contactPerson').html(distr_contactPerson);
-    $('#meta-distr_contactPosition').html(distr_contactPosition);
-    $('#meta-distr_address').html(distr_address);
-    $('#meta-distr_city').html(distr_city);
-    $('#meta-distr_province').html(distr_province);
-    $('#meta-distr_postalCode').html(distr_postalCode);
-    $('#meta-distr_country').html(distr_country);
-    $('#meta-distr_email').html("<a href='mailto:" + distr_email + "'>" + distr_email + "</a>");
-    $('#meta-distr_phone').html(distr_phone);
-    $('#meta-maintenanceFreq').html(maintenanceFreq);
-    
+    $(metadataTable + ' #meta-distr_contactOrg').html(distr_contactOrg);
+    $(metadataTable + ' #meta-distr_contactPerson').html(distr_contactPerson);
+    $(metadataTable + ' #meta-distr_contactPosition').html(distr_contactPosition);
+    $(metadataTable + ' #meta-distr_address').html(distr_address);
+    $(metadataTable + ' #meta-distr_city').html(distr_city);
+    $(metadataTable + ' #meta-distr_province').html(distr_province);
+    $(metadataTable + ' #meta-distr_postalCode').html(distr_postalCode);
+    $(metadataTable + ' #meta-distr_country').html(distr_country);
+    $(metadataTable + ' #meta-distr_email').html("<a href='mailto:" + distr_email + "'>" + distr_email + "</a>");
+    $(metadataTable + ' #meta-distr_phone').html(distr_phone);
+    $(metadataTable + ' #meta-maintenanceFreq').html(maintenanceFreq);
 }
 
 function cleanMetadata(metadata) {
