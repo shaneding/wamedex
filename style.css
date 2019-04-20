@@ -6,6 +6,10 @@ html, body {
     height: inherit;
 }
 
+.card-body {
+    font-size: 90%;
+}
+
 /*
  * Sidebar
  */
