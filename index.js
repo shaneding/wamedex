@@ -8,6 +8,35 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     continuousWorld: true
 }).addTo(map);
 
+var boundsOffControl = L.control({ position: 'topleft' });
+var boundsOnControl = L.control({ position: 'topleft' });
+var controlContainer = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+controlContainer.style.backgroundColor = 'white';
+controlContainer.style.backgroundSize = "27px 27px";
+controlContainer.style.backgroundPosition = '50%';
+controlContainer.style.width = '34px';
+controlContainer.style.height = '34px';
+boundsOffControl.onAdd = function (map) {
+    controlContainer.style.backgroundImage = "url(images/black_location_off.svg)";
+
+    controlContainer.onclick = function(){
+      allBoundsOff();
+      map.removeControl(boundsOffControl);
+      map.addControl(boundsOnControl);
+    }
+    return controlContainer;
+}
+boundsOnControl.onAdd = function (map) {
+    controlContainer.style.backgroundImage = "url(images/black_location_on.svg)";
+    controlContainer.onclick = function(){
+      allBoundsOn();
+      map.removeControl(boundsOnControl);
+      map.addControl(boundsOffControl);
+    }
+    return controlContainer;
+}
+boundsOffControl.addTo(map);
+
 // Sidebar resizing
 var minSize = 100;
 var maxSize = $(window).width() * 0.95;
@@ -42,15 +71,19 @@ for (let i = 0; i < datasets.length; i++) {
     });
     
     var card =  `<div class="card" id="dataset-${i}">` +
-                    `<div class="card-header" id="heading-${i}">` +
-                        '<h6 class="mb-0">' + 
+                    `<div class="row card-header" id="heading-${i}">` +
+                        '<h6 class="col mb-0">' + 
                             `<a class="collapsed text-left stretched-link" data-target="#collapse-${i}" aria-expanded="false" aria-controls="collapse-${i}" onclick="toggleMetadata(${i}, false);">` +
                                 `${title}` + 
                             '</a>' +
                         '</h6>' +
-                        '<div class="row justify-content-end">' +
-                            `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000; font-size: 75%;">[Show Bounds]</button>` +
-                            `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000; font-size: 75%;">[Hide Bounds]</button>` +
+                        '<div class="justify-content-end">' +
+                            `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">` +
+                                '<img src="images/location_on.svg">' +
+                            `</button>` +
+                            `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">` +
+                                '<img src="images/location_off.svg">' +
+                            `</button>` +
                         '</div>' +
                     '</div>' +
                     `<div id="collapse-${i}" class="collapse" aria-labelledby="heading-${i}" data-parent="#datasetList">` +
@@ -61,6 +94,26 @@ for (let i = 0; i < datasets.length; i++) {
                 '</div>';
     $(card).appendTo('#datasetList');
     $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
+}
+
+function allBoundsOff() {
+    for (let i = 0; i < datasets.length; i++) { 
+        if (map.hasLayer(markers[i])) {
+            map.removeLayer(markers[i]);
+            $('#showBounds-' + i).show();
+            $('#hideBounds-' + i).hide();
+        }
+    }
+}
+
+function allBoundsOn() {
+    for (let i = 0; i < datasets.length; i++) { 
+        if (!map.hasLayer(markers[i])) {
+            map.addLayer(markers[i]);
+            $('#showBounds-' + i).hide();
+            $('#hideBounds-' + i).show();
+        }
+    }
 }
 
 function toggleBounds(i) {
