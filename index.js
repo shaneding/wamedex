@@ -212,6 +212,12 @@ function formatRole(role) {
     return role.charAt(0).toUpperCase() + role.slice(1);
 }
 
+function formatConstraint(constraint) {
+    if (constraint === 'otherRestrictions') {
+        return 'Other restrictions';
+    }
+}
+
 function populateMetadataTable(i){
     let metadata = cleanMetadata(datasets[i])["gmd:MD_Metadata"];
     var file_id = metadata["gmd:fileIdentifier"];
@@ -303,16 +309,35 @@ function populateMetadataTable(i){
     $(metadataTable + ' #meta-abstr').html(abstr);
     $(metadataTable + ' #meta-supplInfo').html(supplInfo);
     $(metadataTable + ' #meta-topicCategory').html(topicCategory);
+    
+    if (status === 'underDevelopment') {
+        status = 'Under development';
+    }
     $(metadataTable + ' #meta-status').html(status);
     
     var keywordsString = "";
     for (let i = 0; i < keywords.length; i++) {
-        keywordsString += keywords[i]["gmd:MD_Keywords"]["gmd:keyword"] + ", <br/>"
+        var keywordList = keywords[i]["gmd:MD_Keywords"]["gmd:keyword"];
+        if (typeof keywordList != 'string') {
+            for (let j = 0; j < keywordList.length; j++) {
+                keywordsString += keywordList[j] + ", "
+            }
+        } else {
+            keywordsString += keywordList + ", "
+        }
+        keywordsString += '<p></p>';
     }
-    $(metadataTable + ' #meta-keywords').html(keywordsString.substring(0, keywordsString.length - 7));
+    $(metadataTable + ' #meta-keywords').html(keywordsString.substring(0, keywordsString.length - 9));
+    
+    var urlExpr = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+    var urlRegex = new RegExp(urlExpr).exec(thesaurusName);
+    if (urlRegex != null) {
+      thesaurusName = thesaurusName.replace(urlRegex[0], `<a href="${urlRegex[0]}">${urlRegex[0]}</a>`);
+    }
     $(metadataTable + ' #meta-thesaurusName').html(thesaurusName);
-    $(metadataTable + ' #meta-useConstraints').html(useConstraints);
-    $(metadataTable + ' #meta-accessConstraints').html(accessConstraints);
+    
+    $(metadataTable + ' #meta-useConstraints').html(formatConstraint(useConstraints));
+    $(metadataTable + ' #meta-accessConstraints').html(formatConstraint(accessConstraints));
     
     $(metadataTable + ' #meta-westLon').html(westLon);
     $(metadataTable + ' #meta-eastLon').html(eastLon);
