@@ -56,9 +56,24 @@ $(document).mouseup(function (e) {
     $(document).unbind('mousemove');
 });
 
+// Watch for URL anchors to allow direct access through URL
+function hashChanged() { 
+    let target = window.location.hash.substr(1);
+    if (target !== "") {
+        for (let i = 0; i < datasets.length; i++) {
+            if (datasets[i]["gmd:MD_Metadata"]["gmd:fileIdentifier"] === target && currentMetadata != i) {
+                toggleMetadata(i, true);
+            }
+        }
+    }
+}
+window.addEventListener("hashchange", hashChanged, false);
+$(document).ready(hashChanged);
+
 for (let i = 0; i < datasets.length; i++) { 
     var dataset = datasets[i];
     var title = getTitle(dataset);
+    var datasetId = dataset["gmd:MD_Metadata"]["gmd:fileIdentifier"]["gco:CharacterString"];
     
     var bounding_box = getBoundingBox(dataset);
     if (bounding_box.length == 2) {
@@ -68,26 +83,29 @@ for (let i = 0; i < datasets.length; i++) {
     }
     markers[i].on('click', function(e) {
         toggleMetadata(i, true);
+        window.location.hash = "#" + datasets[i]["gmd:MD_Metadata"]["gmd:fileIdentifier"];
     });
     
-    var card =  `<div class="card" id="dataset-${i}">` +
-                    `<div class="row card-header m-0 p-0" id="heading-${i}" >` +
-                            `<a class="h6 col m-0 p-3 collapsed text-left stretched-link" data-target="#collapse-${i}" aria-expanded="false" aria-controls="collapse-${i}" onclick="toggleMetadata(${i}, false);">` +
+    var card =  `<div id="${datasetId}">` +
+                    `<div class="card" id="dataset-${i}">` +
+                        `<div class="row card-header m-0 p-0" id="heading-${i}" >` +
+                            `<a href="#${datasetId}" class="h6 col m-0 p-3 collapsed text-left stretched-link" data-target="#collapse-${i}" aria-expanded="false" aria-controls="collapse-${i}" onclick="toggleMetadata(${i}, false);" style="text-decoration: none">` +
                                 `${title}` + 
                             '</a>' +
-                        '<div class="m-2">' +
-                            `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">` +
-                                '<i class="material-icons">location_on</i>' +
-                            `</button>` +
-                            `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">` +
-                                '<i class="material-icons">location_off</i>' +
-                            `</button>` +
+                            '<div class="m-2">' +
+                                `<button id="showBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="display: none; z-index: 2000;">` +
+                                    '<i class="material-icons">location_on</i>' +
+                                `</button>` +
+                                `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">` +
+                                    '<i class="material-icons">location_off</i>' +
+                                `</button>` +
+                            '</div>' +
                         '</div>' +
-                    '</div>' +
-                    `<div id="collapse-${i}" class="collapse" aria-labelledby="heading-${i}" data-parent="#datasetList">` +
-                      '<div class="card-body">' +
-                        `<div id="metadataTable-${i}"></div>` +
-                      '</div>' +
+                        `<div id="collapse-${i}" class="collapse" aria-labelledby="heading-${i}" data-parent="#datasetList">` +
+                          '<div class="card-body">' +
+                            `<div id="metadataTable-${i}"></div>` +
+                          '</div>' +
+                        '</div>' +
                     '</div>' +
                 '</div>';
     $(card).appendTo('#datasetList');
