@@ -288,17 +288,17 @@ function populateMetadataTable(i){
     var charset = metadata["gmd:characterSet"]["gmd:MD_CharacterSetCode"];
     var hierarchyLevel = metadata["gmd:hierarchyLevel"]["gmd:MD_ScopeCode"];
     
-    var contact_person = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:individualName"];
-    var contact_org = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:organisationName"];
-    var address = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:deliveryPoint"];
-    var city = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:city"];
-    var province = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:administrativeArea"];
-    var postalCode = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:postalCode"];
-    var country = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:country"];
-    var email = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:electronicMailAddress"];
-    var phone = metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:phone"]["gmd:CI_Telephone"]["gmd:voice"];
-    var website = metadata["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:pointOfContact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:onlineResource"]["gmd:CI_OnlineResource"]["gmd:linkage"]["gmd:URL"];
-    var role = formatRole(metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:role"]["gmd:CI_RoleCode"]);
+    var contact_person = "UW GWF Data Manager"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:individualName"];
+    var contact_org = "Global Water Futures, University of Waterloo"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:organisationName"];
+    var address = "200 University Ave W"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:deliveryPoint"];
+    var city = "Waterloo"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:city"];
+    var province = "ON"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:administrativeArea"];
+    var postalCode = "N2L 3G1"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:postalCode"];
+    var country = "Canada"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:country"];
+    var email = "gwf-uw@uwaterloo.ca"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:address"]["gmd:CI_Address"]["gmd:electronicMailAddress"];
+    var phone = "5198884567 ext 31327"; //metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:phone"]["gmd:CI_Telephone"]["gmd:voice"];
+    var website = "https://uwaterloo.ca/global-water-futures/"; //metadata["gmd:identificationInfo"]["gmd:MD_DataIdentification"]["gmd:pointOfContact"]["gmd:CI_ResponsibleParty"]["gmd:contactInfo"]["gmd:CI_Contact"]["gmd:onlineResource"]["gmd:CI_OnlineResource"]["gmd:linkage"]["gmd:URL"];
+    var role = "Point Of Contact"; //formatRole(metadata["gmd:contact"]["gmd:CI_ResponsibleParty"]["gmd:role"]["gmd:CI_RoleCode"]);
     var dateStamp = metadata["gmd:dateStamp"];
     var standardName = metadata["gmd:metadataStandardName"];
     var standardVersion = metadata["gmd:metadataStandardVersion"];
@@ -354,12 +354,12 @@ function populateMetadataTable(i){
     $(metadataTable + ' #meta-country').html(country);
     $(metadataTable + ' #meta-email').html("<a href='mailto:" + email + "'>" + email + "</a>");
     $(metadataTable + ' #meta-phone').html(phone);
-    $(metadataTable + ' #meta-website').html("<a href='" + website + "'>" + website + "</a>");
+    $(metadataTable + ' #meta-website').html("<a href='" + website + "' target='_blank' rel='noopener noreferrer'>" + website + "</a>");
     $(metadataTable + ' #meta-role').html(role);
     $(metadataTable + ' #meta-dateStamp').html(dateStamp);
     $(metadataTable + ' #meta-standardName').html(standardName);
     $(metadataTable + ' #meta-standardVersion').html(standardVersion);
-    $(metadataTable + ' #meta-datasetURI').html("<a href='" + datasetURI + "'>" + datasetURI + "</a>");
+    $(metadataTable + ' #meta-datasetURI').html("<a href='" + datasetURI + "' target='_blank' rel='noopener noreferrer'>" + datasetURI + "</a>");
     
     var responsiblePartiesString = "";
     for (let i = 0; i < responsibleParties.length; i++) {
@@ -395,7 +395,7 @@ function populateMetadataTable(i){
     var urlExpr = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
     var urlRegex = new RegExp(urlExpr).exec(thesaurusName);
     if (urlRegex != null) {
-      thesaurusName = thesaurusName.replace(urlRegex[0], `<a href="${urlRegex[0]}">${urlRegex[0]}</a>`);
+      thesaurusName = thesaurusName.replace(urlRegex[0], `<a href="${urlRegex[0]}" target="_blank" rel="noopener noreferrer">${urlRegex[0]}</a>`);
     }
     $(metadataTable + ' #meta-thesaurusName').html(thesaurusName);
     
