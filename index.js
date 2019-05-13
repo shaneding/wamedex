@@ -85,6 +85,7 @@ for (let i = 0; i < datasets.length; i++) {
     var markerType = null;
     var markerSelectedIcon = null;
     var markerDeselectedIcon = null;
+    var markerIconClickable = null;
 
     var bounding_box = getBoundingBox(dataset);
 
@@ -139,10 +140,12 @@ for (let i = 0; i < datasets.length; i++) {
     if (markerType == LOCAL_MARKER_TYPE) {
         markerSelectedIcon = "location_on";
         markerDeselectedIcon = "location_off";
+        markerIconClickable = true;
     }
     else if (markerType == GLOBAL_MARKER_TYPE) {
         markerSelectedIcon = "language";
         markerDeselectedIcon = markerSelectedIcon;
+        markerIconClickable = false;
     }
 
     var card =  `<div id="${datasetId}">` +
@@ -168,6 +171,12 @@ for (let i = 0; i < datasets.length; i++) {
                     '</div>' +
                 '</div>';
     $(card).appendTo('#datasetList');
+
+    if (!markerIconClickable) {
+        $(`#hideBounds-${i}`).attr("disabled", true);
+        $(`#showBounds-${i}`).attr("disabled", true);   
+    }
+
     $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
 }
 
