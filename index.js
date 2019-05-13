@@ -175,6 +175,8 @@ for (let i = 0; i < datasets.length; i++) {
     if (!markerIconClickable) {
         $(`#hideBounds-${i}`).attr("disabled", true);
         $(`#showBounds-${i}`).attr("disabled", true);   
+        $(`#hideBounds-${i}`).attr("title", "Global Dataset");
+        $(`#showBounds-${i}`).attr("title", 'Global Dataset');
     }
 
     $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
