@@ -158,7 +158,7 @@ for (let i = 0; i < datasets.length; i++) {
                                 `<button id="hideBounds-${i}" class="btn btn-link" onclick="toggleBounds(${i});" style="z-index: 2000;">` +
                                     `<i class="material-icons"> ${markerDeselectedIcon} </i>` +
                                 `</button>` +
-                            '</div>'
+                            '</div>' +
                         '</div>' +
                         `<div id="collapse-${i}" class="collapse" aria-labelledby="heading-${i}" data-parent="#datasetList">` +
                           '<div class="card-body">' +
@@ -241,6 +241,9 @@ function toggleMetadata(selectedMetadata, scroll_to) {
     // Open selected accordion card
     $('#collapse-' + selectedMetadata).removeClass('collapse');
    
+    console.log(selectedMetadata);
+    console.log($('#collapse-' + selectedMetadata).hasClass('collapse'));
+
     // Scroll to card in dataset list
     if (scroll_to) {
         var target = $('#dataset-' + selectedMetadata);
