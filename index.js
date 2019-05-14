@@ -172,12 +172,19 @@ for (let i = 0; i < datasets.length; i++) {
                 '</div>';
     $(card).appendTo('#datasetList');
 
-    if (!markerIconClickable) {
-        $(`#hideBounds-${i}`).attr("disabled", true);
-        $(`#showBounds-${i}`).attr("disabled", true);   
+    if (markerType == GLOBAL_MARKER_TYPE) {
         $(`#hideBounds-${i}`).attr("title", "Global Dataset");
         $(`#showBounds-${i}`).attr("title", 'Global Dataset');
     }
+    else if (markerType == LOCAL_MARKER_TYPE) {
+        $(`#hideBounds-${i}`).attr("title", "Hide Region");
+        $(`#showBounds-${i}`).attr("title", 'Show Region');
+    }
+
+    if (!markerIconClickable) {
+        $(`#hideBounds-${i}`).attr("disabled", true);
+        $(`#showBounds-${i}`).attr("disabled", true);   
+    } 
 
     $('#datasetList #metadataTable-' + i).load('datasetMetadata.html', function() { populateMetadataTable(i); });
 }
