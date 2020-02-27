@@ -8,8 +8,8 @@ const LOCAL_MARKER_TYPE = "L";
 
 
 
-L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', { 
-    attribution: '<a href="https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use"> Wikimedia Maps </a> | Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     continuousWorld: true
 }).addTo(map);
 
