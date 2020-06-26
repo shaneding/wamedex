@@ -60,7 +60,7 @@ export const PageWrapper = styled.div`
   height: 100%;
   width: 100%;
   margin: auto;
-  margin-top: 16px;
+  margin-top: 0px;
   padding: 24px 48px;
 
   @media only screen and (max-width: ${TABLET_BREAKPOINT}px) {

@@ -110,7 +110,7 @@ const FiltersWrapper = styled.div`
 
 const FilterTitle = styled.div`
   ${Heading2}
-  margin-bottom: 16px;
+  margin-bottom: 0px;
 `;
 
 const FilterSubtitle = styled.div`
@@ -120,7 +120,7 @@ const FilterSubtitle = styled.div`
 `;
 
 const FilterComponent = styled.div`
-  margin: 16px auto;
+  margin: 0px;
   width: 100%;
 
   @media only screen and (max-width: ${({ theme }) => theme.breakpoints.singleColumn}px) {

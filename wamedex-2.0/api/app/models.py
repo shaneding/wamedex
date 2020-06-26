@@ -14,6 +14,7 @@ class BaseArticle(BaseModel):
     title: str
     source: List[str] = []
     url: str
+    coordinates: str
 
 
 class SearchArticle(BaseArticle):

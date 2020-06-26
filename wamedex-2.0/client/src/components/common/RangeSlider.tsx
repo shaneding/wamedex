@@ -72,6 +72,7 @@ const Track = styled.div`
   height: 8px;
   border-radius: 4px;
   margin: 0 ${THUMB_WIDTH / 2}px;
+  position: relative;
 `;
 
 const Thumb = styled.div`
