@@ -36,9 +36,10 @@ button, input, textarea {
 }
 
 .leaflet-container {
-  width: 90%;
-  height: 600px;
-  float: right;
-  margin-left: 50px;
-  margin-top: 20px;
+  /*position: fixed;*/
+  width: 100%;
+  height: 90vh;
+  margin-right: 0px;
+  /*bottom: 100px;*/
+  /*right: 50px;*/
 }

@@ -7,7 +7,9 @@ export interface BaseArticle {
   source: Array<string>;
   title: string;
   url: string;
+  coordinates: string;
 }
+
 
 export interface SearchArticle extends BaseArticle {
   highlights: Array<Array<[number, number]>>;

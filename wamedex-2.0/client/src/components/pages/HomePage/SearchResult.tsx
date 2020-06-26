@@ -12,7 +12,7 @@ import {
   SEARCH_CLICKED_ENDPOINT,
   RELATED_ROUTE,
 } from '../../../shared/Constants';
-import { makePOSTRequest, parseAbstract } from '../../../shared/Util';
+import { parseAbstract } from '../../../shared/Util';
 import { SearchArticle } from '../../../shared/Models';
 import BaseArticleResult from '../../common/BaseArticleResult';
 
@@ -21,6 +21,7 @@ interface SearchResultProps {
   position: number;
   queryId: string;
   queryTokens: Array<string>;
+  updateCoord: Function;
 }
 
 const highlightText = (
@@ -95,7 +96,7 @@ const adjustHighlights = (
   return highlights.map((highlight) => [highlight[0] + adjustment, highlight[1] + adjustment]);
 };
 
-const SearchResult = ({ article, position, queryId, queryTokens }: SearchResultProps) => {
+const SearchResult = ({ article, position, queryId, queryTokens, updateCoord}: SearchResultProps) => {
   const fullTextRef = useRef(null);
   const [collapsed, setCollapsed] = useState<boolean>(true);
 
@@ -117,6 +118,18 @@ const SearchResult = ({ article, position, queryId, queryTokens }: SearchResultP
     : article.highlights;
 
   const interactionRequestBody = { query_id: queryId, result_id: article.id, position };
+
+  const makePOSTRequest = (url: string, data: Object) => {
+    const result = fetch(url, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                  });
+    updateCoord(article.coordinates);
+    return 
+  };
 
   return (
     <SearchResultWrapper>

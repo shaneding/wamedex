@@ -124,6 +124,7 @@ const HomePage = () => {
 
         let data = await response.json();
         const { query_id, response: searchResults } = data;
+        //alert(searchResults)
         const filters = getSearchFilters(searchResults);
 
         setQueryId(query_id);
@@ -165,6 +166,11 @@ const HomePage = () => {
               article.source.some((s) => selectedFilters.sources.has(s))),
         );
 
+  const [coordinates, setCoordinates] = useState("");
+
+  function updateCoordinates(coordinate: string){
+    setCoordinates(coordinate)
+  }
   return (
     <PageWrapper>
       <PageContent>
@@ -177,6 +183,7 @@ const HomePage = () => {
         <ErrorBoundary FallbackComponent={() => <NoResults>No results found</NoResults>}>
           {loading && <Loading />}
           <HomeContent>
+            <SideBar>
             {!query && <HomeText />}
             {query && searchResults !== null && searchResults.length > 0 && (
               <Filters
@@ -191,7 +198,7 @@ const HomePage = () => {
                 <NoResults>No results found</NoResults>
               ) : (
                 <>
-                  <SearchResults>
+                  {/*<SearchResults>*/}
                     {filteredResults.map((article, i) => (
                       <SearchResult
                         key={i}
@@ -199,12 +206,14 @@ const HomePage = () => {
                         position={i}
                         queryTokens={queryTokens}
                         queryId={queryId}
+                        updateCoord={updateCoordinates}
                       />
                     ))}
-                  </SearchResults>
+                  {/*</SearchResults>*/}
                 </>
               ))}
-              <IsoMap></IsoMap>
+              </SideBar>
+              <MapWrapper><IsoMap polygon={coordinates}></IsoMap></MapWrapper>
           </HomeContent>
         </ErrorBoundary>
       </PageContent>
@@ -214,13 +223,21 @@ const HomePage = () => {
 
 export default HomePage;
 
+const SideBar = styled.div`
+  width: 30%;
+  height: 100%;
+  overflow: scroll;
+  margin-right: 0px;
+  display: inline-block;
+  flex-direction: column;
 
+`;
 
 const HomeContent = styled.div`
   width: 100%;
-  margin-right: auto;
-  display: flex;
-
+  height: 90vh;
+  margin-right: 0px;
+  display: block;
   @media only screen and (max-width: ${({ theme }) => theme.breakpoints.singleColumn}px) {
     flex-direction: column;
   }
@@ -233,8 +250,11 @@ const NoResults = styled.div`
   padding-bottom: 24px;
 `;
 
-const SearchResults = styled.div`
+const MapWrapper = styled.div`
+  float: right;
   display: flex;
   flex-direction: column;
-  width: 25%;
+  margin-left: 0px;
+  margin-top: 0px;
+  width: 70%;
 `;
